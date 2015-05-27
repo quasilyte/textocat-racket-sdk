@@ -47,3 +47,5 @@ This is unofficial Racket SDK for [Textocat](http://textocat.com).
   `tests`<br>
   `package distribution`<br>
   `multiple batches into retrieve`
+  `check if auth is needed for status info`
+  `deal with broken encodings`
