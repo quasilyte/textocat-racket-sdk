@@ -4,6 +4,8 @@
 
 (provide get-param http-code!)
 
+;;; public [exported]
+
 (define (get-param key val)
   (string-append key "=" val))
 
