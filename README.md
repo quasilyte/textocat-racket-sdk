@@ -16,7 +16,7 @@ First of all, require both source files and log in:
 
 Service info can be requested with ease:
 
-```
+```racket
 (displayln (textocat:status))
 (displayln (if (textocat:offline?) "offline..." "online!"))
 
