@@ -6,41 +6,56 @@ This is unofficial Racket SDK for [Textocat](http://textocat.com).
 
 # Usage
 
+First of all, require both source files and log in:
+
 ```scheme
-#lang racket
+(require "batch.rkt" "textocat.rkt")
 
-(require "./textocat.rkt" "./batch.rkt")
+(textocat:login "-- AUTH TOKEN --")
+```
 
-(define input.json #"[{\"text\":\"text you wish textocat to process\"}]")
+Service info can be requested with ease:
 
-(textocat:login "--- YOUR API KEY ---")
+```
+(displayln (textocat:status))
+(displayln (if (textocat:offline?) "offline..." "online!"))
 
-;;; let us be serious, we are going to check service status before proceed:
-(unless (textocat:online?) (raise "textocat is offline!"))
+;; There is also `textocat:online?' function which is equal to
+;; (not (textocat:offline?))
+```
 
-;;; we can get status message as a string:
-(define status (textocat:status))
+If you want to do single request, code below will do without<br>
+explicit call to `textocat:login`.<br>
+`textocat:with-auth-token` can also be used to begin<br>
+another session which encapsulated inside passed lambda.
 
-;;; create a queue request, save batchId and batchStatus into `batch':
-(define batch (batch:queue input.json))
-;;; now lock while batchStatus is IN_PROGRESS:
-(set! batch (batch:sync batch))
-;;; ask for the result, we know it is either FINISHED or FAILED:
-(define result (batch:retrieve batch))
-(displayln result)
+```scheme
+;; Inner lambda can contain multiple actions.
 
-;;; could be written as:
-;; (displayln (batch:retrieve (batch:sync (batch:queue input.json))))
+(displayln (textocat:with-auth-token "-- AUTH TOKEN --"
+  (λ () (batch:slurp "[{\"text\":\"
+    Председатель совета директоров ОАО «МДМ Банк» Олег Вьюгин — о том, чему
+    приведет обмен санкциями между Россией и Западом в следующем году.
+    Беседовала Светлана Сухова.\"}]"))))
 
-;;; or even better:
-;; (displayln (batch:sync-retrieve (batch:queue input.json)))
+;; Here, after `textocat:with-auth-token', we have previous auth_token again.
+```
 
-;;; why not like this:
-;; (displayln (batch:slurp input.json))
+```scheme
+(define input.json-1 "[{\"text\":\"
+  Председатель совета директоров ОАО «МДМ Банк» Олег Вьюгин — о том, чему
+  приведет обмен санкциями между Россией и Западом в следующем году.
+  Беседовала Светлана Сухова.\"}]")
 
-;;; there is also keyword argument support in `retrieve' procedure,
-;;; so the example below will wait for one and a half second before `retrieve'.
-;; (displayln (batch:retrieve #:after 1.5 (batch:queue input.json)))
+(define input.json-2 "[{\"text\":\"
+  Важна ли скорость компиляции?
+  Бьёрн Страуструп и Мартин Одерски считают, что нет.\"}]")
+
+;; Retrieve 2 (max is 50) collections at once:
+
+(displayln (textocat:batch-sync-retrieve (list
+  (batch:queue input.json-1)
+  (batch:queue input.json-2))))
 ```
 
 ### TODO/ADD
