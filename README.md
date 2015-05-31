@@ -8,7 +8,7 @@ This is unofficial Racket SDK for [Textocat](http://textocat.com).
 
 First of all, require both source files and log in:
 
-```scheme
+```racket
 (require "batch.rkt" "textocat.rkt")
 
 (textocat:login "-- AUTH TOKEN --")
@@ -29,7 +29,7 @@ explicit call to `textocat:login`.<br>
 `textocat:with-auth-token` can also be used to begin<br>
 another session which encapsulated inside passed lambda.
 
-```scheme
+```racket
 ;; Inner lambda can contain multiple actions.
 
 (displayln (textocat:with-auth-token "-- AUTH TOKEN --"
@@ -41,7 +41,7 @@ another session which encapsulated inside passed lambda.
 ;; Here, after `textocat:with-auth-token', we have previous auth_token again.
 ```
 
-```scheme
+```racket
 (define input.json-1 "[{\"text\":\"
   Председатель совета директоров ОАО «МДМ Банк» Олег Вьюгин — о том, чему
   приведет обмен санкциями между Россией и Западом в следующем году.
