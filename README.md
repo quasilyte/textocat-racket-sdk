@@ -1,3 +1,8 @@
+# WARNING
+
+This sdk is not maintained and based on the really old API.
+Do not use this.
+
 # Unofficial Textocat Racket (PLT/Scheme) SDK
 
 This is unofficial Racket SDK for [Textocat](http://textocat.com).
